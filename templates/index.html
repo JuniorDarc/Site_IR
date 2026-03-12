@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Documentos – Rio Ave</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+         <img src="/static/img/logo-rio-ave.png" alt="Rio Ave Logo" class="logo">
+        <h1>Portal de Documentos – Rio Ave</h1>
+        <p>Encontre seus documentos rapidamente informando seus dados.</p>
+    </header>
+
+    <main class="main-container">
+        <section class="form-section">
+            <form id="formulario" class="form-box">
+                <label>Nome completo</label>
+                <input type="text" name="nome" placeholder="Digite seu nome" required>
+
+                <label>CPF</label>
+                <input type="text" name="cpf" id="cpf" placeholder="000.000.000-00" required>
+
+                <label>Empreendimento</label>
+                <select name="empreendimento" required>
+                    <option value="">Selecione o empreendimento</option>
+                    <option value="empreendimento.a">Empreendimento A</option>
+                    <option value="empreendimento.b">Empreendimento B</option>
+                </select>
+
+                <button type="submit" class="btn-submit">Buscar Documento</button>
+
+                <div id="loader" class="loader hidden">
+               <span class="spinner"></span>
+                     Buscando documento...
+                </div>
+
+         <!-- 🔥 MENSAGEM FICA FORA -->
+              <div id="mensagem" class="mensagem hidden"></div>
+
+             <div id="resultado" class="hidden">
+             <button id="btnDownload" class="btn-download"></button>
+             </div>
+                </div>
+            </form>
+        </section>
+    </main>
+
+           <a 
+  href="https://wa.me/5581999999999?text=Olá,%20preciso%20de%20ajuda%20com%20meus%20documentos%20Rio%20Ave."
+  target="_blank"
+  class="whatsapp-suporte"
+>
+    <img src="{{ url_for('static', filename='img/whatsapp.svg') }}" alt="WhatsApp">
+    <span>Suporte</span>
+</a>
+
+    <footer class="footer">
+        <p>© {{ year }} Rio Ave – Todos os direitos reservados</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

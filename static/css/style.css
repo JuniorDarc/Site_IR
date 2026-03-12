@@ -1,0 +1,330 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+:root {
+  --azul: #1f4e5f;
+  --azul-claro: #5fa8b3;
+  --areia: #f2efe9;
+  --verde: #6b8f71;
+  --texto: #2b2b2b;
+  --branco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--areia);
+  color: var(--texto);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(180deg, var(--azul), var(--azul-claro));
+  color: var(--branco);
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.logo {
+  max-width: 270px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* MAIN */
+.main-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.form-box {
+  background: var(--branco);
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--azul-claro);
+}
+
+/* BOTÕES */
+.btn-submit {
+  background: var(--azul);
+  color: var(--branco);
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background: var(--azul-claro);
+}
+
+.btn-download {
+  background: var(--verde);
+  color: var(--branco);
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-download:hover {
+  background: #5d7f63;
+}
+
+/* LOADER */
+.loader {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--verde);
+}
+
+.hidden {
+  display: none;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #777;
+}
+/* Loader */
+.loader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    color: #2b6f8e; /* azul sofisticado */
+    font-weight: 500;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #cfe5ec;
+    border-top: 3px solid #2b6f8e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mensagens */
+.mensagem {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.mensagem.sucesso {
+    background: #e6f4ef;
+    color: #1f6b4f;
+    border-left: 4px solid #2f8f6b;
+}
+
+.mensagem.erro {
+    background: #fdecea;
+    color: #9f2d20;
+    border-left: 4px solid #c0392b;
+}
+
+/* Botão Download */
+.btn-download {
+    margin-top: 15px;
+    background: #2b6f8e;
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease;
+}
+
+.btn-download:hover {
+    background: #1f556d;
+}
+
+/* Utilitário */
+.hidden {
+    display: none;
+}
+
+.whatsapp-suporte {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #2f5d50; /* verde suave */
+    font-weight: 500;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.whatsapp-suporte img {
+    width: 70px;
+    height: 70px;
+}
+
+.whatsapp-suporte:hover {
+    transform: translateY(-3px);
+    opacity: 0.85;
+}
+
+.whatsapp-suporte span {
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+
+
+
+/* =========================
+   RESPONSIVO – MOBILE
+========================= */
+@media (max-width: 768px) {
+
+  /* HEADER */
+  .header {
+    padding: 30px 16px;
+  }
+
+  .logo {
+    max-width: 200px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .header p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  /* MAIN */
+  .main-container {
+    padding: 24px 16px;
+  }
+
+  .form-box {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  label {
+    font-size: 13px;
+  }
+
+  input,
+  select {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* BOTÕES */
+  .btn-submit,
+  .btn-download {
+    font-size: 15px;
+    padding: 14px;
+  }
+
+  /* LOADER */
+  .loader {
+    font-size: 13px;
+    justify-content: center;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* MENSAGENS */
+  .mensagem {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  /* WHATSAPP */
+  .whatsapp-suporte img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .whatsapp-suporte span {
+    font-size: 13px;
+  }
+
+  /* FOOTER */
+  .footer {
+    font-size: 11px;
+    padding: 16px;
+  }
+}
+
+
+@media (max-width: 420px) {
+
+  .header h1 {
+    font-size: 18px;
+  }
+
+  .form-box {
+    padding: 20px 16px;
+  }
+
+  input,
+  select {
+    font-size: 13px;
+  }
+
+  .btn-submit,
+  .btn-download {
+    font-size: 14px;
+  }
+}
+
+
