@@ -5,8 +5,12 @@ from googleapiclient.discovery import build
 
 SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
 
+
 def get_drive_service():
     credentials_json = os.environ.get("GOOGLE_CREDENTIALS")
+
+    if not credentials_json:
+        raise RuntimeError("Variável de ambiente GOOGLE_CREDENTIALS não configurada.")
 
     credentials_dict = json.loads(credentials_json)
 

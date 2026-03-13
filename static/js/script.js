@@ -5,7 +5,6 @@ const resultado = document.getElementById("resultado");
 const btnDownload = document.getElementById("btnDownload");
 const mensagem = document.getElementById("mensagem");
 
-// máscara CPF
 cpfInput.addEventListener("input", () => {
     let cpf = cpfInput.value.replace(/\D/g, "").slice(0, 11);
 
@@ -38,18 +37,20 @@ form.addEventListener("submit", async (e) => {
         });
 
         if (!response.ok) {
-            const erro = await response.json();
-            mostrarMensagem(erro.message, "erro");
+            const erro = await response.json().catch(() => ({
+                message: "Erro ao processar a solicitação."
+            }));
+
+            mostrarMensagem(erro.message || "Erro ao buscar documento.", "erro");
             loader.classList.add("hidden");
             return;
         }
 
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-
         const cpfLimpo = cpfInput.value.replace(/\D/g, "");
 
-        btnDownload.innerHTML = `📄 Baixar PDF`;
+        btnDownload.innerHTML = "📄 Baixar PDF";
 
         btnDownload.onclick = () => {
             const a = document.createElement("a");
