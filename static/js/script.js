@@ -6,6 +6,9 @@ const loader = document.getElementById("loader");
 const resultado = document.getElementById("resultado");
 const btnDownload = document.getElementById("btnDownload");
 const mensagem = document.getElementById("mensagem");
+const btnBuscar = document.getElementById("btnBuscar");
+
+let turnstilePronto = false;
 
 // Nome sempre em MAIÚSCULO
 nomeInput.addEventListener("input", () => {
@@ -28,12 +31,62 @@ function mostrarMensagem(texto, tipo) {
     mensagem.classList.remove("hidden");
 }
 
+function limparMensagem() {
+    mensagem.textContent = "";
+    mensagem.className = "mensagem hidden";
+}
+
+function desabilitarBusca() {
+    btnBuscar.disabled = true;
+    btnBuscar.textContent = "Valide a segurança para buscar";
+    turnstilePronto = false;
+}
+
+function habilitarBusca() {
+    btnBuscar.disabled = false;
+    btnBuscar.textContent = "Buscar Documento";
+    turnstilePronto = true;
+}
+
+function resetarTurnstile() {
+    if (window.turnstile) {
+        try {
+            turnstile.reset("#turnstile-widget");
+        } catch (e) {
+            console.warn("Não foi possível resetar o Turnstile:", e);
+        }
+    }
+    desabilitarBusca();
+}
+
+// callbacks globais exigidos pelo data-callback do Turnstile
+window.turnstileSucesso = function () {
+    habilitarBusca();
+};
+
+window.turnstileExpirado = function () {
+    desabilitarBusca();
+    mostrarMensagem("A verificação de segurança expirou. Valide novamente.", "erro");
+};
+
+window.turnstileErro = function () {
+    desabilitarBusca();
+    mostrarMensagem("Erro na verificação de segurança. Tente novamente.", "erro");
+};
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    if (!turnstilePronto) {
+        mostrarMensagem("Confirme a verificação de segurança antes de continuar.", "erro");
+        return;
+    }
+
     loader.classList.remove("hidden");
     resultado.classList.add("hidden");
-    mensagem.classList.add("hidden");
+    limparMensagem();
+    btnBuscar.disabled = true;
+    btnBuscar.textContent = "Buscando...";
 
     const formData = new FormData(form);
 
@@ -48,8 +101,9 @@ form.addEventListener("submit", async (e) => {
                 message: "Erro ao processar a solicitação."
             }));
 
-            mostrarMensagem(erro.message || "Erro ao buscar documento.", "erro");
             loader.classList.add("hidden");
+            mostrarMensagem(erro.message || "Erro ao buscar documento.", "erro");
+            resetarTurnstile();
             return;
         }
 
@@ -75,10 +129,15 @@ form.addEventListener("submit", async (e) => {
         loader.classList.add("hidden");
         resultado.classList.remove("hidden");
         mostrarMensagem("Documento encontrado com sucesso.", "sucesso");
+        resetarTurnstile();
 
     } catch (err) {
         loader.classList.add("hidden");
         mostrarMensagem("Erro ao buscar o documento. Tente novamente.", "erro");
         console.error(err);
+        resetarTurnstile();
     }
 });
+
+// Estado inicial
+desabilitarBusca();

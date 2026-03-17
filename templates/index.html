@@ -33,9 +33,18 @@
                     <option value="empreendimento.b">Empreendimento B</option>
                 </select>
 
-                <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+                <div
+                    id="turnstile-widget"
+                    class="cf-turnstile"
+                    data-sitekey="{{ turnstile_site_key }}"
+                    data-callback="turnstileSucesso"
+                    data-expired-callback="turnstileExpirado"
+                    data-error-callback="turnstileErro"
+                ></div>
 
-                <button type="submit" class="btn-submit">Buscar Documento</button>
+                <button type="submit" id="btnBuscar" class="btn-submit" disabled>
+                    Buscar Documento
+                </button>
 
                 <div id="loader" class="loader hidden">
                     <span class="spinner"></span>
