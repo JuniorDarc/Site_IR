@@ -1,18 +1,25 @@
 const form = document.getElementById("formulario");
-const cpfInput = document.getElementById("cpf");
+const nomeInput = document.getElementById("nome");
+const numeroInput = document.getElementById("numero");
+const letraInput = document.getElementById("letra");
 const loader = document.getElementById("loader");
 const resultado = document.getElementById("resultado");
 const btnDownload = document.getElementById("btnDownload");
 const mensagem = document.getElementById("mensagem");
 
-cpfInput.addEventListener("input", () => {
-    let cpf = cpfInput.value.replace(/\D/g, "").slice(0, 11);
+// Nome sempre em MAIÚSCULO
+nomeInput.addEventListener("input", () => {
+    nomeInput.value = nomeInput.value.toUpperCase();
+});
 
-    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+// Número: apenas dígitos
+numeroInput.addEventListener("input", () => {
+    numeroInput.value = numeroInput.value.replace(/\D/g, "");
+});
 
-    cpfInput.value = cpf;
+// Letra opcional: apenas uma letra e sempre em maiúsculo
+letraInput.addEventListener("input", () => {
+    letraInput.value = letraInput.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 1);
 });
 
 function mostrarMensagem(texto, tipo) {
@@ -48,14 +55,18 @@ form.addEventListener("submit", async (e) => {
 
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const cpfLimpo = cpfInput.value.replace(/\D/g, "");
 
-        btnDownload.innerHTML = "📄 Baixar PDF";
+        const nome = (formData.get("nome") || "").trim();
+        const numero = (formData.get("numero") || "").trim();
+        const letra = (formData.get("letra") || "").trim().toUpperCase();
+
+        const prefixo = `${numero}${letra}`;
+        btnDownload.innerHTML = `📄 Baixar PDF – ${prefixo}_${nome}`;
 
         btnDownload.onclick = () => {
             const a = document.createElement("a");
             a.href = url;
-            a.download = `${cpfLimpo}.pdf`;
+            a.download = `${prefixo}_${nome}.pdf`;
             document.body.appendChild(a);
             a.click();
             a.remove();

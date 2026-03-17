@@ -7,6 +7,7 @@ import io
 import os
 import re
 import requests
+import unicodedata
 
 app = Flask(__name__)
 
@@ -26,26 +27,22 @@ TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY")
 TURNSTILE_SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
 
 
-def limpar_cpf(cpf: str) -> str:
-    return re.sub(r"\D", "", cpf or "")
+def normalizar_nome(nome: str) -> str:
+    nome = (nome or "").strip()
+    nome = unicodedata.normalize("NFD", nome)
+    nome = "".join(c for c in nome if unicodedata.category(c) != "Mn")
+    nome = re.sub(r"\s+", " ", nome).strip()
+    return nome.upper()
 
 
-def cpf_valido(cpf: str) -> bool:
-    cpf = limpar_cpf(cpf)
+def normalizar_numero(numero: str) -> str:
+    return re.sub(r"\D", "", numero or "")
 
-    if len(cpf) != 11 or not cpf.isdigit():
-        return False
 
-    if cpf == cpf[0] * 11:
-        return False
-
-    soma = sum(int(cpf[i]) * (10 - i) for i in range(9))
-    dig1 = (soma * 10 % 11) % 10
-
-    soma = sum(int(cpf[i]) * (11 - i) for i in range(10))
-    dig2 = (soma * 10 % 11) % 10
-
-    return cpf[9] == str(dig1) and cpf[10] == str(dig2)
+def normalizar_letra(letra: str) -> str:
+    letra = (letra or "").strip().upper()
+    letra = re.sub(r"[^A-Z]", "", letra)
+    return letra[:1]
 
 
 def validar_turnstile(token: str, remote_ip: str | None = None) -> bool:
@@ -107,26 +104,24 @@ def index():
 @app.route("/enviar", methods=["POST"])
 @limiter.limit("5 per minute")
 def enviar():
-    nome = (request.form.get("nome") or "").strip()
-    cpf = request.form.get("cpf") or ""
+    nome = normalizar_nome(request.form.get("nome") or "")
+    numero = normalizar_numero(request.form.get("numero") or "")
+    letra = normalizar_letra(request.form.get("letra") or "")
     empreendimento = request.form.get("empreendimento") or ""
     turnstile_token = request.form.get("cf-turnstile-response") or ""
 
-    if not nome or not cpf or not empreendimento:
+    if not nome or not numero or not empreendimento:
         return jsonify({"success": False, "message": "Dados incompletos."}), 400
 
     if empreendimento not in PASTAS_EMPREENDIMENTOS:
         return jsonify({"success": False, "message": "Empreendimento inválido."}), 400
 
-    cpf_limpo = limpar_cpf(cpf)
-    if not cpf_valido(cpf_limpo):
-        return jsonify({"success": False, "message": "CPF inválido."}), 400
-
     # Validação anti-bot obrigatória
     if not validar_turnstile(turnstile_token, request.remote_addr):
         return jsonify({"success": False, "message": "Falha na verificação de segurança. Tente novamente."}), 403
 
-    nome_arquivo = f"{cpf_limpo}.pdf"
+    prefixo = f"{numero}{letra}"
+    nome_arquivo = f"{prefixo}_{nome}.pdf"
     pasta_id = PASTAS_EMPREENDIMENTOS[empreendimento]
 
     try:
@@ -169,7 +164,6 @@ def enviar():
         )
 
     except Exception:
-        # Evita expor erro interno ao usuário
         return jsonify({"success": False, "message": "Erro interno ao processar a solicitação."}), 500
 
 
