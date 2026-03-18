@@ -42,7 +42,7 @@ body::after {
 .header {
   background: linear-gradient(180deg, var(--azul), var(--azul-claro));
   color: var(--branco);
-  padding: 40px 20px;
+  padding: 10px 5px;
   text-align: center;
 }
 
@@ -86,14 +86,6 @@ label {
   font-size: 14px;
   margin-bottom: 6px;
   display: block;
-}
-
-input, select {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 18px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
 }
 
 input:focus, select:focus {
